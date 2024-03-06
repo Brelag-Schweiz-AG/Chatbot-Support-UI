@@ -111,7 +111,7 @@ const sendMessage = async () => {
   // This header will force the request to go to a specific deployment.
   // Remove this line to have the request observe the endpoint traffic rules
   requestHeaders.append("azureml-model-deployment", "styler-ml-jjneg-2");
-  const url = "https://styler-ml-jjneg.switzerlandnorth.inference.ml.azure.com/score";
+  const url = "https://corsproxy.io/?https://styler-ml-jjneg.switzerlandnorth.inference.ml.azure.com/score";
   const proxyUrl = "http://localhost:8010/proxy/score"
 
   try {
