@@ -8,5 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Chat: typeof import('./src/components/Chat.vue')['default']
+    ContactForm: typeof import('./src/components/ContactForm.vue')['default']
   }
 }
