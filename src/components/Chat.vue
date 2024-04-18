@@ -13,15 +13,14 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="4" v-for="(product, index) in products" :key="index">
-                    <v-card>
+                  <v-col cols="12" sm="6" v-for="(product, index) in products" :key="index">
+                    <v-card :style="'background-color: #414141; color: white'">
                       <v-card-title>{{ product.name }}
-
-                        <v-img :src="product.imageSrc" aspect-ratio="1.8"></v-img>
+                        <v-img :src="product.imageSrc" aspect-ratio="1.7"></v-img>
                       </v-card-title>
                       <v-card-text>{{ product.description }}</v-card-text>
                       <v-card-actions>
-                        <v-btn color="primary" @click="productChoice = product">Auswählen</v-btn>
+                        <v-btn color="white" variant="outlined" @click="productChoice = product">Auswählen</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-col>
@@ -40,12 +39,8 @@
                 </v-chip>
               </div>
 
-              <v-chip elevation="2" dark style="height:auto;white-space: normal;border-radius: 0px" class="pa-4 mb-2">
-                {{ startMessage }}
-              </v-chip>
-
               <template v-for="(chat, i) in chatHistory">
-                <div :class="'d-flex flex-row-reverse'">
+                <div :class="'d-flex flex-row-reverse'" v-if="chat.inputs.chat_input">
                   <v-chip elevation="2" :color="'primary'" dark
                     style="height:auto;white-space: normal;border-radius: 0px" class="pa-4 mb-2">
                     {{ chat.inputs.chat_input }}
@@ -58,6 +53,10 @@
                   </v-chip>
                 </div>
               </template>
+              <v-btn v-if="showContactFormOption" class="mt-4 primary" color="red" variant="outlined"
+                @click="showContactForm = true">
+                Support kontaktieren
+              </v-btn>
               <v-col v-if="loading" cols="6">
                 <v-skeleton-loader :elevation="0" color="" type="paragraph"></v-skeleton-loader>
               </v-col>
@@ -103,21 +102,22 @@ import ContactForm from './ContactForm.vue';
 const loading = ref(false);
 const snackbar = ref(false);
 const showContactForm = ref(false);
+const showContactFormOption = ref(false);
 const productChoice: Ref<Product | null> = ref(null);
 const errorMessage = ref("");
 
 const startMessage = "Hallo, wie kann ich Ihnen helfen?";
 
-const chatHistory: Ref<MessageHistory> = ref([]);
+const chatHistory: Ref<MessageHistory> = ref([{ inputs: { chat_input: undefined }, outputs: { chat_output: startMessage } }]);
 const messageForm = ref({ content: "", me: true });
 const url = "https://corsproxy.io/?https://styler-ml-jjneg.switzerlandnorth.inference.ml.azure.com/score";
 const proxyUrl = "http://localhost:8010/proxy/score";
 const apiKey = "iuTLmfTdZxifVCIviIwz9jW3NQniRjgw";
 
 const products: Product[] = [
-  { name: 'Dominoswiss', description: 'MX FE ULTRA, MX FE PRO, MaxFlex, LX RLUP1A, etc ..', imageSrc: 'src/assets/dominoswiss.png' },
-  { name: 'KnockautX', description: 'Sturzsensor, Thermostat, LED E14, Shaky, etc ...', imageSrc: 'src/assets/knockautx.png' },
-  { name: 'Andere', description: 'Knockaut Titan, Paystar, Apps, etc ...', imageSrc: 'src/assets/knockautx.png' },
+  { value: 'dominoswiss', name: 'Dominoswiss', description: 'MX FE ULTRA, MX FE PRO, MaxFlex, LX RLUP1A, etc ..', imageSrc: 'src/assets/dominoswiss.png' },
+  { value: 'knockautx', name: 'KnockautX', description: 'Sturzsensor, Thermostat, LED E14, Shaky, etc ...', imageSrc: 'src/assets/knockautx.png' },
+  // { name: 'Andere', description: 'Knockaut Titan, Paystar, Apps, etc ...', imageSrc: 'src/assets/knockautx.png' },
 ]
 
 const sendMessage = async () => {
@@ -133,6 +133,7 @@ const sendMessage = async () => {
   loading.value = true;
 
   const requestBody = {
+    "product_line": productChoice.value?.value,
     "chat_input": messageForm.value.content,
     "chat_history": chatHistory.value
   };
@@ -143,36 +144,40 @@ const sendMessage = async () => {
 
   });
 
-  messageForm.value.content = "Brelag Support antwortet..."
+  messageForm.value.content = "Brelag SupportBot antwortet..."
+
+  const useApi = true;
+  let response = {
+    data: {
+      // chat_output: "Mit dem MaxFlex Sender können Sie Ihr individuelles Gebäude steuern und nutzen. Dank des modularen Systems und der wechselbaren Tastenkappen können Sie den Funktaster so konfigurieren, dass er alle Funktionen, Szenarien und Routinen Ihres Gebäudes steuert (Source: 1XiYER5-dEN6AntkGcbG-pKeSNyRCd6mR__MANUAL_Dominoswiss_MaxFlex_v1.1.pdf)."
+      // chat_output: "Ich kann ihnen leider nicht helfen. {{SHOW_CONTACT_FORM}}"
+      chat_output: "Der Dominoswiss MX FE ULTRA hat die Abmessungen 51 x 51 x 16.5 mm ohne Federzugklemme und 51 x 51 x 19.5 mm mit Federzugklemme (Source: azureml://locations/switzerlandnorth/workspaces/8fa915ff-765f-47cd-8d2d-605decf9e9b0/data/Anleitungen_DominoSwiss/versions/1/1n3Xt40gg5STAOuCOKV2IiXjzgxEAPFta__Dominoswiss MX FE ULTRA_Produktblatt_Brelag Schweiz AG.pdf). Bitte beachten Sie, dass die genauen asföalsjdföas. Und danach kommt nochmal so eine Source (Source: azureml://locations/switzerlandnorth/workspaces/8fa915ff-765f-47cd-8d2d-605decf9e9b0/data/Anleitungen_DominoSwiss/versions/1/1n3Xt40gg5STAOuCOKV2IiXjzgxEAPFta__Dominoswiss MX FE ULTRA_Produktblatt_Brelag Schweiz AG.pdf)."
+
+    }
+  }
 
   try {
-    const response = await axios.post(url, requestBody, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + apiKey,
-        "azureml-model-deployment": "styler-ml-jjneg-2"
-      }
-    });
-    /*
-    const response = {
-      data: {
-        chat_output: "Um eine KnockautX LED-Leuchtmittel zu installieren, befolgen Sie bitte die folgenden Schritte:\n\n1. Laden Sie die kostenlose KnockautX App aus dem Google Play Store oder dem iOS App Store herunter.\n2. Erstellen Sie einen neuen Benutzeraccount (folgen Sie dazu den Schritten in der App).\n3. Nehmen Sie das KnockautX Master Gateway TWO gemäss entsprechender Gebrauchsanleitung in Betrieb.\n4. Schrauben Sie das LED-Leuchtmittel in eine Leuchte oder Lampe mit entsprechender Fassung des Typs E27 oder E14, je nach Modell des Leuchtmittels.\n5. Schliessen Sie die Leuchte oder Lampe an die Stromversorgung an und schalten Sie sie ein.\n6. Das LED-Leuchtmittel beginnt für 6 Sekunden lang zu blinken und geht danach automatisch für 3 Minuten in den Kopplungsmodus.\n7. Wechseln Sie nun zu Ihrem Smartphone, öffnen Sie die KnockautX App und führen Sie die Schritte in Abschnitt 5 durch.\n\nBitte beachten Sie, dass die genauen Schritte je nach Modell des Leuchtmittels variieren können (Source: Gebrauchsanleitung KnockautX LED-Leuchtmittel RGB Full Color E27 9W.pdf, Gebrauchsanleitung KnockautX LED-Leuchtmittel RGB Full Color E14 6W.pdf)."
-        // chat_output: "{{SHOW_CONTACT_FORM}}"
-      }
+    if (useApi) {
+      response = await axios.post(url, requestBody, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + apiKey,
+          "azureml-model-deployment": "styler-ml-jjneg-3"
+        }
+      });
     }
-    */
-
 
     console.log({ response })
-    showContactForm.value = checkShowContactForm(response.data.chat_output)
+    const { showForm, parsedResponse } = checkShowContactForm(response.data.chat_output)
+    showContactFormOption.value = showForm
+    console.log(showContactForm)
+    response.data.chat_output = parsedResponse
 
-    if (!showContactForm.value) {
-      const parsedHtml = await processChatGPTResponse(response.data.chat_output);
-      console.log({ parsedHtml })
+    const parsedHtml = await processChatGPTResponse(response.data.chat_output);
+    console.log({ parsedHtml })
 
-      const output = parsedHtml
-      chatHistory.value[chatHistory.value.length - 1].outputs = { chat_output: output };
-    }
+    const output = parsedHtml
+    chatHistory.value[chatHistory.value.length - 1].outputs = { chat_output: output };
   } catch (error) {
     errorMessage.value = `An error occurred while sending the message: ${error}`;
     snackbar.value = true;

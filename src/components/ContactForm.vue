@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="formSubmitted">
+  <v-container v-if="!formSubmitted">
     <v-chip elevation="2" color="light-green-darken-2" dark style="height:auto;white-space: normal;border-radius: 0px" class="pa-4 mb-2">
       Es scheint, als ob unser Chatbot Ihnen nicht weiter helfen kann. Bitte füllen Sie das Formular aus,
       damit sich einer unserer Mitarbeiter bei Ihnen melden kann. Der Chatverlauf wird dabei an uns übermittelt.
@@ -51,6 +51,7 @@
 </template>
 
 <script setup lang="ts">
+import axios from 'axios';
 import { ref } from 'vue';
 import { VForm } from 'vuetify/components';
 
@@ -94,6 +95,20 @@ const submitForm = async () => {
         chatHistory: props.chatHistory,
       });
       // TODO: Send form data to an API
+      await axios
+        .post("https://submit-form.com/zLkPfcRxd", {
+          message: props.chatHistory,
+          name: name.value,
+          companyName: companyName.value,
+          email: email.value,
+          phoneNumber: phoneNumber.value,
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (response) {
+          console.error(response);
+        });
 
       // Show message that form was submitted
       formSubmitted.value = true;
