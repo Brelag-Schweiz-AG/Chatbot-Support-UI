@@ -25,7 +25,7 @@ export const processChatGPTResponse = async (response: string): Promise<string> 
   return html;
 };
 
-const linkifyPDFNames = (text: string) => {
+const linkifyPDFNames = (text: string): string => {
   // sample text: "(Source: azureml://locations/switzerlandnorth/workspaces/8fa915ff-765f-47cd-8d2d-605decf9e9b0/data/Anleitungen_DominoSwiss/versions/1/1n3Xt40gg5STAOuCOKV2IiXjzgxEAPFta__Dominoswiss MX FE ULTRA_Produktblatt_Brelag Schweiz AG.pdf)."
 
   // Check if text contains "(Source: ...)" pattern
