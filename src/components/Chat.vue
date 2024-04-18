@@ -115,8 +115,8 @@ const proxyUrl = "http://localhost:8010/proxy/score";
 const apiKey = "iuTLmfTdZxifVCIviIwz9jW3NQniRjgw";
 
 const products: Product[] = [
-  { value: 'dominoswiss', name: 'Dominoswiss', description: 'MX FE ULTRA, MX FE PRO, MaxFlex, LX RLUP1A, etc ..', imageSrc: 'src/assets/dominoswiss.png' },
-  { value: 'knockautx', name: 'KnockautX', description: 'Sturzsensor, Thermostat, LED E14, Shaky, etc ...', imageSrc: 'src/assets/knockautx.png' },
+  { value: 'dominoswiss', name: 'Dominoswiss', description: 'MX FE ULTRA, MX FE PRO, MaxFlex, LX RLUP1A, etc ..', imageSrc: 'https://raw.githubusercontent.com/Brelag-Schweiz-AG/Chatbot-Support-UI/master/docs/assets/dominoswiss.png' },
+  { value: 'knockautx', name: 'KnockautX', description: 'Sturzsensor, Thermostat, LED E14, Shaky, etc ...', imageSrc: 'https://raw.githubusercontent.com/Brelag-Schweiz-AG/Chatbot-Support-UI/master/docs/assets/knockautx.png' },
   // { name: 'Andere', description: 'Knockaut Titan, Paystar, Apps, etc ...', imageSrc: 'src/assets/knockautx.png' },
 ]
 
