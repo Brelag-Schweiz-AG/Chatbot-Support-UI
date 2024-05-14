@@ -55,7 +55,7 @@ const linkifyPDFNames = (text: string): string => {
     filename = filename.trim();
 
     // Create markdown link
-    const newText = `[(${filename}<span class="mdi mdi-file-pdf-box"></span>)](https://drive.google.com/drive/folders/${folder})`
+    const newText = `<p><a href="https://drive.google.com/drive/folders/${folder}" target="_blank">(${filename} <span class="mdi mdi-file-pdf-box"></span>)</a></p>`
 
     // Delete everything in original link between subTextStartIndex and subTextEndIndex
     text = text.substring(0, subTextStartIndex) + text.substring(subTextEndIndex);
