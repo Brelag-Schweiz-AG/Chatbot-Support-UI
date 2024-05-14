@@ -1,5 +1,4 @@
 import { marked } from 'marked';
-import DOMPurify from 'dompurify';
 
 export const checkShowContactForm = (response: string): {showForm: boolean, parsedResponse: string} => {
   // Parse if {{ SHOW_CONTACT_FORM }} is present in response and remove it from response
@@ -18,10 +17,8 @@ export const processChatGPTResponse = async (response: string): Promise<string> 
   }
 
   // Use marked to convert Markdown to HTML
-  let html = await marked.parse(response);
+  const html = await marked.parse(response);
 
-  // Sanitize the HTML
-  html = DOMPurify.sanitize(html);
   return html;
 };
 
@@ -55,7 +52,7 @@ const linkifyPDFNames = (text: string): string => {
     filename = filename.trim();
 
     // Create markdown link
-    const newText = `<p><a href="https://drive.google.com/drive/folders/${folder}" target="_blank">(${filename} <span class="mdi mdi-file-pdf-box"></span>)</a></p>`
+    const newText = `<a href="https://drive.google.com/drive/folders/${folder}" target="_blank">(${filename} <span class="mdi mdi-file-pdf-box"></span>)</a>`
 
     // Delete everything in original link between subTextStartIndex and subTextEndIndex
     text = text.substring(0, subTextStartIndex) + text.substring(subTextEndIndex);
