@@ -98,6 +98,7 @@ import { processChatGPTResponse, checkShowContactForm } from './util';
 import { MessageHistory, Product } from './types';
 import ContactForm from './ContactForm.vue';
 import { SSE } from 'sse.js';
+import axios from 'axios';
 
 const loading = ref(false);
 const snackbar = ref(false);
@@ -112,6 +113,7 @@ const chatHistory: Ref<MessageHistory> = ref([{ inputs: { chat_input: undefined 
 const messageForm = ref({ content: "", me: true });
 const url = "https://corsproxy.io/?https://styler-ml-jjneg.switzerlandnorth.inference.ml.azure.com/score";
 const proxyUrl = "http://localhost:8010/proxy/score";
+const apiUrl = "https://stylerapimanagement.azure-api.net/score"
 const apiKey = "iuTLmfTdZxifVCIviIwz9jW3NQniRjgw";
 
 const products: Product[] = [
@@ -158,11 +160,11 @@ const sendMessage = async () => {
 
   const chatLength = chatHistory.value.length - 1
   chatHistory.value[chatLength].outputs = { chat_output: "" };
-  const source = new SSE(url, {
+  const source = new SSE(apiUrl, {
     headers: {
       "Accept": "text/event-stream",
       "Authorization": "Bearer " + apiKey,
-      // "azureml-model-deployment": "styler-ml-jjneg-5"
+      "Ocp-Apim-Subscription-Key": "39ae1ae82dfb47838bf1f8ccacf67a50"
     },
     payload: JSON.stringify(requestBody),
     start: false
@@ -198,20 +200,18 @@ const sendMessage = async () => {
       source.close()
       loading.value = false
       messageForm.value.content = ""
-      console.log(streamMessage)
     }
   });
   source.stream()
   return;
-  /*
   // This was the code for the old non-streaming api approach
   try {
     if (useApi) {
-      response = await axios.post(proxyUrl, requestBody, {
+      response = await axios.post(apiUrl, requestBody, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + apiKey,
-          "azureml-model-deployment": "styler-ml-jjneg-3"
+          "Ocp-Apim-Subscription-Key": "39ae1ae82dfb47838bf1f8ccacf67a50"
         }
       });
     }
@@ -235,7 +235,6 @@ const sendMessage = async () => {
   messageForm.value.content = "";
 
   loading.value = false;
-  */
 }
 
 // Create a method to scroll to the bottom of the chat container
