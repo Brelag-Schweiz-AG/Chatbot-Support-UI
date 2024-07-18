@@ -4,7 +4,7 @@
       <v-col cols="auto" class="flex-grow-1 flex-shrink-0">
         <v-card flat class="d-flex flex-column fill-height">
           <v-card-title>
-            [TEST] Support Chatbot
+            Brelag Support Chatbot
           </v-card-title>
           <v-card v-if="!productChoice">
             <v-card-title>
@@ -93,11 +93,11 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
 import { Ref, ref, nextTick, watch, onMounted } from 'vue';
 import { processChatGPTResponse, checkShowContactForm } from './util';
 import { MessageHistory, Product } from './types';
 import ContactForm from './ContactForm.vue';
+import { SSE } from 'sse.js';
 
 const loading = ref(false);
 const snackbar = ref(false);
@@ -156,9 +156,58 @@ const sendMessage = async () => {
     }
   }
 
+  const chatLength = chatHistory.value.length - 1
+  chatHistory.value[chatLength].outputs = { chat_output: "" };
+  const source = new SSE(url, {
+    headers: {
+      "Accept": "text/event-stream",
+      "Authorization": "Bearer " + apiKey,
+      // "azureml-model-deployment": "styler-ml-jjneg-5"
+    },
+    payload: JSON.stringify(requestBody),
+    start: false
+  });
+  let streamMessage = ""
+  let isProcessing = false
+  let isFirstMessage = true
+  source.addEventListener('message', async (e: any) => {
+    const data = JSON.parse(e.data);
+    const newData = data.chat_output;
+    streamMessage += newData
+    const isEndMessage = newData === "" && !isFirstMessage
+    isFirstMessage = false
+
+    if (isProcessing && !isEndMessage) return
+    // If it's still processing the last message, wait for isProcessing to be false
+    while (isProcessing) {
+      await new Promise(resolve => setTimeout(resolve, 100))
+    }
+
+    isProcessing = true
+
+    const streamMessageCopy = streamMessage
+
+    const { showForm, parsedResponse } = checkShowContactForm(streamMessageCopy)
+    showContactFormOption.value = showForm
+
+    const parsedHtml = await processChatGPTResponse(parsedResponse);
+
+    chatHistory.value[chatLength].outputs.chat_output = parsedHtml;
+    isProcessing = false
+    if (isEndMessage) {
+      source.close()
+      loading.value = false
+      messageForm.value.content = ""
+      console.log(streamMessage)
+    }
+  });
+  source.stream()
+  return;
+  /*
+  // This was the code for the old non-streaming api approach
   try {
     if (useApi) {
-      response = await axios.post(url, requestBody, {
+      response = await axios.post(proxyUrl, requestBody, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer " + apiKey,
@@ -186,6 +235,7 @@ const sendMessage = async () => {
   messageForm.value.content = "";
 
   loading.value = false;
+  */
 }
 
 // Create a method to scroll to the bottom of the chat container

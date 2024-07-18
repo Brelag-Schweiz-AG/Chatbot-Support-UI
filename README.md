@@ -1,7 +1,10 @@
 # Local dev
+
+- npm install -g local-cors-proxy
 - lcp --proxyUrl https://styler-ml-jjneg.switzerlandnorth.inference.ml.azure.com
 
 # Deploy
+
 - `yarn build`
 - Rename `dist` to `docs`
 

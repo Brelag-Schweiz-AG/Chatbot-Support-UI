@@ -1091,6 +1091,11 @@ semver@^7.5.4:
   resolved "https://registry.npmjs.org/source-map-js/-/source-map-js-1.0.2.tgz"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
 
+sse.js@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/sse.js/-/sse.js-2.5.0.tgz#9d9b715d13630d0a72d0fa9467f20f3c4b783a00"
+  integrity sha512-I7zYndqOOkNpz9KIdFZ8c8A7zs1YazNewBr8Nsi/tqThfJkVPuP1q7UE2h4B0RwoWZxbBYpd06uoW3NI3SaZXg==
+
 strip-outer@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/strip-outer/-/strip-outer-1.0.1.tgz"
