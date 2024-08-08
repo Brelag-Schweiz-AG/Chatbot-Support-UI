@@ -174,7 +174,7 @@ const sendMessage = async () => {
   let isFirstMessage = true
   source.addEventListener('message', async (e: any) => {
     const data = JSON.parse(e.data);
-    const newData = data.chat_output;
+    const newData = data.answer;
     streamMessage += newData
     const isEndMessage = newData === "" && !isFirstMessage
     isFirstMessage = false
