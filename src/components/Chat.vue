@@ -114,7 +114,7 @@ const messageForm = ref({ content: "", me: true });
 const url = "https://corsproxy.io/?https://styler-ml-jjneg.switzerlandnorth.inference.ml.azure.com/score";
 const proxyUrl = "http://localhost:8010/proxy/score";
 const apiUrl = "https://stylerapimanagement.azure-api.net/score"
-const apiKey = "iuTLmfTdZxifVCIviIwz9jW3NQniRjgw";
+const apiKey = "cvGbBds2NfT39O6CzdbaD8eNVwlKssyY";
 
 const products: Product[] = [
   { value: 'dominoswiss', name: 'Dominoswiss', description: 'MX FE ULTRA, MX FE PRO, MaxFlex, LX RLUP1A, etc ..', imageSrc: 'https://raw.githubusercontent.com/Brelag-Schweiz-AG/Chatbot-Support-UI/master/docs/assets/dominoswiss.png' },

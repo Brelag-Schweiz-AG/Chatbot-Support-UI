@@ -12,7 +12,9 @@ export const checkShowContactForm = (
     response.includes(escapedKey) || response.includes(unescapedKey);
 
   // Remove both variants from the response
-  let parsedResponse = response.replace(new RegExp(escapedKey, "g"), "");
+  // To replace the escaped key, we need to escape the escape character
+  const escapedEscapedKey = "\\\\{\\\\{SHOW_CONTACT_FORM\\\\}\\\\}";
+  let parsedResponse = response.replace(new RegExp(escapedEscapedKey, "g"), "");
   parsedResponse = parsedResponse.replace(new RegExp(unescapedKey, "g"), "");
   return { showForm, parsedResponse };
 };
