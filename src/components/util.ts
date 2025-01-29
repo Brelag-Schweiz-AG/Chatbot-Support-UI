@@ -29,6 +29,8 @@ export const processChatGPTResponse = async (
     console.log("Error while linkifying PDF names:", error);
     // Continue
   }
+  // Replace strings
+  response = response.replace(/Tuya/g, "KnockautX");
 
   // Use marked to convert Markdown to HTML
   const html = await marked.parse(response);
